@@ -1,0 +1,68 @@
+{
+	"title": "First Show Evah",
+	"groups": {
+		"1": {
+			"name": "All PARs",
+			"fixtures": [
+				"101", "102", "103", "104", "105", "106"
+			]
+		},
+		"2": {
+			"name": "All HEXs",
+			"fixtures": [
+				"201", "202", "203", "204"
+			]
+		}
+	},
+	"fixtures": {
+		"101": {
+			"name": "Mono 1",
+			"personality": "1" 
+		}
+	},
+	"personalities": {
+		"1": {
+			"manufacturer": "Monoprice",
+			"model": "PAR575",
+			"mode": "9ch",
+			"parameters": {
+				"intensity": {
+					"offset": 1
+				},
+				"color": {
+					"offset": 2,
+					"resolution": 8,
+					"type": "RGBW"
+				},
+				"strobe": {
+					"offset": 6,
+					"resolution": 8,
+					"options": {
+						"open": 0,
+						"rate": {
+							"from": 7,
+							"to": 255,
+							"direction": "Slow_to_Fast"
+						}
+					}
+				},
+				"dimmer_mode": {
+					"offset": 9,
+					"options": {
+						"direct": {
+							"from": 0,
+							"to": 31
+						},
+						"mode1": {
+							"from": 32,
+							"to": 96
+						}
+					}
+				}
+
+			} 
+		}
+	},
+	"patch": [
+	]
+}

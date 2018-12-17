@@ -1,0 +1,38 @@
+{
+  "name": "svet",
+  "version": "0.0.1",
+  "description": "Svetlina",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.7.3",
+    "dmx": "^0.1.1",
+    "npm": "^6.5.0",
+    "proton-native": "^1.1.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/node": "^7.2.0",
+    "@babel/plugin-proposal-class-properties": "^7.2.1",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
+    "@fortawesome/fontawesome-free": "^5.6.1",
+    "babel-loader": "^8.0.4",
+    "css-loader": "^2.0.1",
+    "file-loader": "^2.0.0",
+    "net": "^1.0.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "request": "^2.88.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.84.0",
+    "tls": "0.0.1",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2"
+  }
+}

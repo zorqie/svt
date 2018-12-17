@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<link rel="stylesheet" type="text/css" href="semantic.min.css">
+	<style>
+		table {
+			font-family: monospace;
+			/*border-collapse: collapse;*/
+			border-spacing: 1px;
+			line-height: 1.2;
+			margin: 1em;
+		}
+		table th {
+			font-size: x-small;
+			color: #ddd;
+			background-color: #666;
+		}
+		table tr * {
+			padding: 0 3px;
+			width: 2.5em;
+			text-align: right;
+			border: 1px solid #eee;
+			border-top-width: 2px;
+		}
+		.patched {
+			background-color: #eee;
+		}
+		.patched.white { border-top-color: black; }
+		.patched.amber { border-top-color: #FFCC66; }
+		.patched.uv	   { border-top-color: #9000FF; }
+		.patched.green { border-top-color: green; }
+		.patched.red   { border-top-color: red; }
+		.patched.blue  { border-top-color: #3399ff; }
+		.patched.dimmer{ border-top-color: #ccc; background-color: #ccc; }
+		.patched.from  { border-left-color: #000; }
+	</style>
+<head>
+	<title>Ze Universe</title>
+</head>
+<body>
+	<div id="app"></div>
+</body>
+<script src="bundle/main.js"></script>
+</html>

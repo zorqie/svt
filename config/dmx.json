@@ -1,0 +1,80 @@
+{
+	"title": "Ze DMX Dashboard",
+	"presets": [
+		{
+			"label": "+White",
+			"values": {
+				"102": 255, "211": 255
+			}
+		},
+		{
+			"label": "Red",
+			"values": {
+				"99": 255, "100": 0, "101": 0, "102": 0,
+				"207": 255, "208": 0, "209": 0, "210": 0, "211": 0, "212": 0 
+			}
+		},
+		{
+			"label": "Purple",
+			"values": {
+				"99": 255, "101": 255, "207": 255, "209": 255
+			}
+		}	
+	],
+	"outputs": {
+		"art1": {
+			"start": 1,
+			"driver": "artnet",
+			"host": "192.168.1.42"
+		}
+	},
+	"devices": [
+		{
+			"id": "1",
+			"type": "monoprice-par-575",
+			"address": 98,
+			"name": "Par 1"
+		},
+		{
+			"id": "21",
+			"type": "monoprice-par-hex",
+			"address": 206,
+			"name": "Hex 1"
+		},
+		{
+			"id": "22",
+			"type": "monoprice-par-hex",
+			"address": 217,
+			"name": "Hex 2"
+		},
+		{
+			"id": "23",
+			"type": "monoprice-par-hex",
+			"address": 228,
+			"name": "Hex 3"
+		}
+	],
+	"universes": {
+		"art1": {
+			"output": {
+				"driver": "artnet",
+				"device": "192.168.1.42"
+			},
+			"devices": [
+				{
+					"id": "1",
+					"type": "monoprice-par-575",
+					"address": 98,
+					"name": "Par 1",
+					"_comment1": "name is optional and is shown above the sliders if sets"
+				},
+				{
+					"id": "2",
+					"type": "monoprice-par-hex",
+					"address": 206,
+					"name": "Hex 1"
+				}
+			]
+		}
+	}
+}

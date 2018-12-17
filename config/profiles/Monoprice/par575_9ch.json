@@ -1,0 +1,41 @@
+{
+	"monoprice-par-575": {
+		"channels": [
+			"dimmer", 
+			"red", 
+			"green", 
+			"blue", 
+			"white",
+			"strobe", 
+			"program",
+			"program_speed",
+			"dimmer_mode", 
+		],
+		"ranges": {
+			"dimmer": {
+				"type": "continuous",
+				"min": 0,
+				"max": 255
+			},
+			"strobe": {
+				"type": "mixed",
+				"options": [
+					{"value": 0, "label": "Open"},
+					{"min": 15, "max": 255, "label": "Strobe", "direction": "slow_to_fast"},
+				]
+			}
+			"dimmer_mode": {
+				"type": "step",
+				"options": [
+					{"value":   0, "label": "Hardware"},
+					{"value":   6, "label": "Dimmer 0"},
+					{"value":  56, "label": "Dimmer 1"},
+					{"value": 106, "label": "Dimmer 2"},
+					{"value": 156, "label": "Dimmer 3"},
+					{"value": 206, "label": "Dimmer 4"},
+				]
+			},
+			
+		}
+	}
+}

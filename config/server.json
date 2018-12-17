@@ -1,0 +1,12 @@
+{
+	"title": "Ze DMX Dashboard",
+	"server": {
+		"listen_port": 8080,
+		"listen_host": "::",
+
+		"_uid": "www-data",
+		"_gid": "www-data",
+		"_comment1": "To drop privileges change the '_uid' and '_gid' keys to 'uid' and 'gid'.",
+		"_comment2": "On macOS uid and gid must be set in the launchd script."
+	}
+}
