@@ -11,15 +11,38 @@ const Channel = ({patched, value}) => {
 }
 
 export default class UniverseOut extends React.Component {	
-	constructor({offset = 0}) { 
+	constructor({socket, offset = 0}) { 
 		super()
 		this.offset = offset
+		// this.state = {dmx: {}}
+		this.socket = socket
+	}
+	// componentDidMount() {
+		// this.socket.on('init', this.init)
+	// 	this.socket.on('update', this.receiveUpdate)
+	// }
+	// componentWillUnmount() {
+		// this.socket.removeListener('init', this.init)
+	// 	this.socket.removeListener('update', this.receiveUpdate)
+	// }
 
-		console.log("UOut", this)
+	// receiveUpdate = u => {
+	// 	const dmx = this.state.dmx
+	// 	for(var i in u) {
+	// 		dmx[i] = u[i] 
+	// 	}
+	// 	this.setState({dmx})
+	// }
+	
+	renderChannel = (i, j, value) => {
+		const { patched } = this.props
+		const p = patched || {}
+		return (<td key={1+i*16+j} className={p ? 'patched ' + p[1+i*16+j] : ''}>
+					{value || '0'}
+				</td>)
 	}
 	render() {
-		const { patched, dmx } = this.props
-		const p = patched || {}
+		const { dmx } = this.props
 		return (
 			<table>
 				<caption>Universe</caption>
@@ -28,11 +51,7 @@ export default class UniverseOut extends React.Component {
 					<tr key={i}>
 						<th key={1+i*16}>{1+i*16}</th>
 						{sixteen.map(j =>
-							<Channel 
-								key={i+j} 
-								patched={p[1+i*16+j]} 
-								value={dmx[1+i*16+j]} 
-							/>
+							this.renderChannel(i, j, dmx[1+i*16+j])
 						)}
 					</tr>
 				)}

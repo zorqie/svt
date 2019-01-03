@@ -14,25 +14,27 @@
 			]
 		}
 	},
-	"fixtures": {
-		"101": {
+	"heads": [
+		{
+			"id": "101",
 			"name": "Mono 1",
-			"personality": "1" 
+			"profile": "1" 
 		}
-	},
-	"personalities": {
+	],
+	"profiles": {
 		"1": {
 			"manufacturer": "Monoprice",
 			"model": "PAR575",
 			"mode": "9ch",
 			"parameters": {
 				"intensity": {
-					"offset": 1
+					"offset": 1,
+					"resolution": 8 
 				},
 				"color": {
 					"offset": 2,
-					"resolution": 8,
-					"type": "RGBW"
+					"type": "RGBW",
+					"resolution": 8
 				},
 				"strobe": {
 					"offset": 6,

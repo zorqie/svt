@@ -1,13 +1,16 @@
 {
 	"title": "Ze DMX Dashboard",
+	"lastShow": "one",
 	"presets": [
 		{
+			"id": "p0",
 			"label": "+White",
 			"values": {
 				"102": 255, "211": 255
 			}
 		},
 		{
+			"id": "p1",
 			"label": "Red",
 			"values": {
 				"99": 255, "100": 0, "101": 0, "102": 0,
@@ -15,11 +18,33 @@
 			}
 		},
 		{
+			"id": "p2",
 			"label": "Purple",
 			"values": {
 				"99": 255, "101": 255, "207": 255, "209": 255
 			}
-		}	
+		},
+		null,
+		{
+			"id": "p4",
+			"label": "Fade In",
+			"values": {
+				"98": { "to": 255, "fade": 2 },
+				"206": { "to": 255, "fade": 2, "delay": 2 },
+				"217": { "to": 255, "fade": 2, "delay": 4 },
+				"228": { "to": 255, "fade": 2, "delay": 6 }
+			}
+		},
+		{
+			"id": "p5",
+			"label": "Fade Out",
+			"values": {
+				"98": { "to": 0, "fade": 2 },
+				"206": { "to": 0, "fade": 2 },
+				"217": { "to": 0, "fade": 2 },
+				"228": { "to": 0, "fade": 2 }
+			}
+		}
 	],
 	"outputs": {
 		"art1": {
@@ -34,6 +59,48 @@
 			"type": "monoprice-par-575",
 			"address": 98,
 			"name": "Par 1"
+		},
+		{
+			"id": "2",
+			"type": "monoprice-par-575",
+			"address": 107,
+			"name": "Par 2"
+		},
+		{
+			"id": "3",
+			"type": "monoprice-par-575",
+			"address": 126,
+			"name": "Par 3"
+		},
+		{
+			"id": "4",
+			"type": "monoprice-par-575",
+			"address": 135,
+			"name": "Par 4"
+		},
+		{
+			"id": "5",
+			"type": "monoprice-par-575",
+			"address": 144,
+			"name": "Par 5"
+		},
+		{
+			"id": "6",
+			"type": "monoprice-par-575",
+			"address": 153,
+			"name": "Par 6"
+		},
+		{
+			"id": "7",
+			"type": "monoprice-par-575",
+			"address": 162,
+			"name": "Par 7"
+		},
+		{
+			"id": "8",
+			"type": "monoprice-par-575",
+			"address": 171,
+			"name": "Par 8"
 		},
 		{
 			"id": "21",
@@ -52,6 +119,12 @@
 			"type": "monoprice-par-hex",
 			"address": 228,
 			"name": "Hex 3"
+		},
+		{
+			"id": "24",
+			"type": "monoprice-par-hex",
+			"address": 239,
+			"name": "Hex 4"
 		}
 	],
 	"universes": {

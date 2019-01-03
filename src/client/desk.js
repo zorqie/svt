@@ -1,8 +1,9 @@
 import React from 'react'
 
-import UniverseOut from './universe-out'
 import CommandInput from './command-input'
 import ChannelSlider from './channel-slider'
+import HeadsGrid from './heads-grid'
+import UniverseOut from './universe-out'
 
 const dmx = val => val > 255 ? 255 : val < 0 ? 0 : val
 
@@ -21,14 +22,21 @@ export default class Desk extends React.Component {
 	}
 	componentWillUnmount() {
 		this.socket.removeListener('init', this.init)
+		this.socket.removeListener('update', this.receiveUpdate)
 	}
 
 	receiveUpdate = u => {
-		this.setState({dmx: {...this.state.dmx, ...u}})
+		// console.time("receiveUpdate")
+		const dmx = this.state.dmx
+		for(var i in u) {
+			dmx[i] = u[i]
+		}
+		this.setState({dmx})
+		// console.timeEnd("receiveUpdate")
 	}
 
 	init = msg => {
-		const { profiles, setup } = msg
+		const { profiles, setup, dmx } = msg
 		const patched = {}
 		for(let d in setup.devices) {
 			const { address, type } = setup.devices[d]
@@ -37,10 +45,15 @@ export default class Desk extends React.Component {
 				patched[address + 1*c] = profile.channels[c]
 			}
 			patched[address] += ' from'
-		}
-		this.setState({inited: true, patched, profiles, ...setup })
+		}		
+		this.setState({inited: true, patched, profiles, dmx, ...setup })
 		console.log("thus", this)
 
+	}
+
+	handlePreset = (preset) => {
+		console.log("Handling", preset)
+		preset && requestAnimationFrame(() => this.socket.emit('update', preset.values))
 	}
 
 	getOne(channel) {
@@ -72,7 +85,7 @@ export default class Desk extends React.Component {
 		if (Array.isArray(channel)) {
 			const u = {}
 			for(var c=0; c < channel.length; c++) {
-				const oldVal = 1*this.state.dmx[channel[c]]
+				const oldVal = 1*this.state.dmx[channel[c]] || 0
 				const newVal = dmx(oldVal + d * delta)
 				if(oldVal != newVal) {
 					u[channel[c]] = newVal
@@ -80,7 +93,8 @@ export default class Desk extends React.Component {
 			}
 			this.socket.emit('update', u)
 		} else {
-			const oldVal = 1*this.state.dmx[channel]
+			const oldVal = 1*this.state.dmx[channel] || 0
+			console.log("OLD VAL", oldVal)
 			var newVal = dmx(oldVal + d * delta)
 			if(oldVal != newVal) {
 				const u = {}
@@ -98,18 +112,27 @@ export default class Desk extends React.Component {
 	/>
 
 	render() {
-		const { dmx, patched, profiles, devices } = this.state
+		const { dmx, patched, presets, profiles, devices } = this.state
 		return (
 			<div>
 				<h1>Ze DMX Desk</h1>
-				<UniverseOut 
-					dmx={dmx} 
+				<button onClick={e =>this.handlePreset(this.state.presets[3])}> CLICK </button>
+				{/*<UniverseOut 
+					dmx={dmx}
+					socket={this.socket} 
 					patched={patched}
-				/>
+				/>*/}
 				<CommandInput />
+			{/*
+			*/}
 				{patched && Object.keys(patched).map(ch => patched[ch].indexOf('dimmer ') >= 0 ? this.renderSlider(ch) : '')}
 				<h2>ALL</h2>
 				{this.renderSlider(["98", '206', '217', "228"])}
+			{/*
+			*/}
+				<HeadsGrid caption='Presets' items={presets} handleClick={this.handlePreset}/>
+				<HeadsGrid caption='Heads' items={devices} />
+				
 			</div>
 		)
 	}

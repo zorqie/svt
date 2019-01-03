@@ -23,7 +23,7 @@
 					{"value": 0, "label": "Open"},
 					{"min": 15, "max": 255, "label": "Strobe", "direction": "slow_to_fast"},
 				]
-			}
+			},
 			"dimmer_mode": {
 				"type": "step",
 				"options": [

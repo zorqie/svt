@@ -1,7 +1,7 @@
 import { ease } from './easing.js'
 const resolution = 25
 
-class Anim {
+class Animation {
 
 	constructor(engine) {
 		this.engine = engine
@@ -26,7 +26,8 @@ class Anim {
 		this.fx_stack = []
 	}
 
-	run(onFinish) {
+	async run(onFinish) {
+		// console.log("Running", this)
 		var config = {}
 		var t = 0
 		var d = 0
@@ -71,4 +72,4 @@ class Anim {
 	}
 
 }
-export default Anim
+export default Animation

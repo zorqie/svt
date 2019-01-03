@@ -15,7 +15,6 @@ class DMXEngine extends EventEmitter {
 		this.drivers   = drivers
 		console.log("Drivers: ", drivers)
 		this.outputs = {}
-		// this.patchOutput("art1", {driver:'artnet', host: "192.168.1.42"})
 	}
 
 	patchOutput(name, options) {
@@ -36,32 +35,5 @@ class DMXEngine extends EventEmitter {
 		this.emit('updateAll', {value, from, to})
 	}
 }
-/*
-DMX.devices   = require('./devices')
-DMX.Animation = require('./anim')
 
-
-DMX.prototype.addUniverse = function(name, driver, device_id, options) {
-	return this.universes[name] = new this.drivers[driver](device_id, options)
-}
-
-DMX.prototype.update = function(universe, channels) {
-	this.universes[universe].update(channels)
-	this.emit('update', universe, channels)
-}
-
-DMX.prototype.updateAll = function(universe, value) {
-	this.universes[universe].updateAll(value)
-	this.emit('updateAll', universe, value)
-}
-
-DMX.prototype.universeToObject = function(universe) {
-	var universe = this.universes[universe]
-	var u = {}
-	for(var i = 0; i < 512; i++) {
-		u[i] = universe.get(i)
-	}
-	return u
-}
-*/
 export default DMXEngine

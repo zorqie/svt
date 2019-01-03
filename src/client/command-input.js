@@ -1,6 +1,5 @@
 import React from 'react'
 import request from 'request'
-import { Form, Input } from 'semantic-ui-react'
 
 export default class CommandInput extends React.Component {
 	constructor() {
@@ -9,7 +8,8 @@ export default class CommandInput extends React.Component {
 			command: ''
 		}
 	}
-	handleChange = (e, { name, value }) => {
+	handleChange = e => {
+		const { name, value } = e.target
 		this.setState({command: value})
 	}
 	submit = e => {
@@ -21,16 +21,13 @@ export default class CommandInput extends React.Component {
 	render() {
 		const { command } = this.state
 		return (
-			<Form onSubmit={this.submit}>
-				<Input
-					icon="chevron right"
-					iconPosition='left'
-					fluid
+			<form onSubmit={this.submit} className='command'> 
+				<input
 					name='command'
 					value={command}
 					onChange={this.handleChange}
 				/>
-			</Form>
+			</form>
 		)
 	}
 }
