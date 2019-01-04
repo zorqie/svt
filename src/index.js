@@ -72,6 +72,8 @@ app.use('/', express.static(__dirname + '/public'));
 		res.json({"state": engine.dmx.data.slice(1)})
 	})
 
+const cueEmitter = (cue, result) => socket.emit('cue', cue, result)
+
 	io.sockets.on('connection', function(socket) {
 		socket.emit('init', {'profiles': engine.profiles, 'setup': engine.config, 'dmx': engine.dmx.data})
 
@@ -86,6 +88,24 @@ app.use('/', express.static(__dirname + '/public'));
 
 		engine.dmx.on('update', function(update) {
 			socket.emit('update', update)
+		})
+
+		socket.on('cue', function(cue, action) {
+			switch (action) {
+				case 'add':
+					engine.addCue(cue, cueEmitter)
+					break
+				case 'update': 
+					engine.updateCue(cue, cueEmitter)
+					break
+				case 'remove':
+					engine.removeCue(cue, cueEmitter)
+					break
+				default:
+					//execute
+
+				
+			}
 		})
 
 		socket.on('add_cue', function(cue) {
