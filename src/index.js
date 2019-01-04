@@ -103,7 +103,7 @@ const cueEmitter = (cue, result) => socket.emit('cue', cue, result)
 					break
 				default:
 					//execute
-
+					engine.exec(cue, cueEmitter)
 				
 			}
 		})
