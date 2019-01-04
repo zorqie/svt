@@ -12,8 +12,7 @@
     "compression": "^1.7.3",
     "cors": "^2.8.5",
     "dmx": "^0.1.1",
-    "npm": "^6.5.0",
-    "proton-native": "^1.1.10"
+    "npm": "^6.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.0",

@@ -5,6 +5,7 @@ import Animation from './animation'
 import DMXEngine from './dmx'
 import parser from './parser'
 import profiles from './profiles'
+import Store from './store'
 
 export default class Engine extends EventEmitter {
 	constructor() {
@@ -23,6 +24,8 @@ export default class Engine extends EventEmitter {
 			this.dmx.patchOutput(out, this.config.outputs[out])
 		}
 		// console.log("Constructed Engine.", this)
+		this.cueStore = new Store(`config/shows/${this.config.lastShow}/presets.json`, 'presets')
+		this.config.cues = this.cueStore.list()
 	}
 
 	addCue(cue, callback) {
