@@ -13,14 +13,14 @@ export default class Store extends EventEmitter {
 	add(item, callback) {
 		let { path, items } = this
 		this.items = [...items, item]
-		write(callback)
+		this.write(callback)
 		this.emit('added', item)
 	}
 
 	remove(item, callback) {
 		const { path, items } = this
 		this.items = items.filter(p => p === null || p.id !== item.id)
-		write(callback)
+		this.write(callback)
 		this.emit('removed', item)
 	}
 
@@ -33,7 +33,7 @@ export default class Store extends EventEmitter {
 				break
 			}
 		}
-		write(callback)
+		this.write(callback)
 		this.emit('updated', item)
 	}
 

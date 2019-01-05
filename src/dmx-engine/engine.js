@@ -15,41 +15,43 @@ export default class Engine extends EventEmitter {
 		this.parseLine = parser(this)
 
 		this.config	= JSON.parse(fs.readFileSync('config/dmx.json', 'utf8'))
-		const show = JSON.parse(fs.readFileSync(`config/shows/${this.config.lastShow}/presets.json`, 'utf8'))
-		if(show.presets) {
-			this.config.presets = show.presets
-		} 
-		console.log("CUES: ", this.config.presets)
+		// const show = JSON.parse(fs.readFileSync(`config/shows/${this.config.lastShow}/presets.json`, 'utf8'))
+		// if(show.presets) {
+		// 	this.config.presets = show.presets
+		// } 
+		// console.log("CUES: ", this.config.presets)
 		for(const out in this.config.outputs) {
 			this.dmx.patchOutput(out, this.config.outputs[out])
 		}
 		// console.log("Constructed Engine.", this)
 		this.cueStore = new Store(`config/shows/${this.config.lastShow}/presets.json`, 'presets')
 		this.config.cues = this.cueStore.list()
+		// console.log("CUESES: ", this.config.cues)
 	}
 
 	addCue(cue, callback) {
-		let { lastShow, presets } = this.config
-		presets = [...presets, cue]
-		fs.writeFile(`config/shows/${lastShow}/presets.json`, JSON.stringify({presets}, null, '\t'), callback)
-		this.config.presets = presets
+		// let { lastShow, presets } = this.config
+		// presets = [...presets, cue]
+		// fs.writeFile(`config/shows/${lastShow}/presets.json`, JSON.stringify({presets}, null, '\t'), callback)
+		// this.config.presets = presets
+		this.cueStore.add(cue, callback)
 	}
+
 	removeCue(cue, callback) {
-		const { lastShow, presets } = this.config
-		this.config.presets = presets.filter(p => p === null || p.id !== cue.id)
-		fs.writeFile(`config/shows/${lastShow}/presets.json`, JSON.stringify({presets: this.config.presets}, null, '\t'), callback)
-		
+		this.cueStore.remove(cue, callback)
 	}
+
 	updateCue(cue, callback) {
 		const { lastShow, presets } = this.config
-		// this.config.presets = presets.filter(p => p === null || p.id !== cue.id).concat(cue)
-		for(let i = 0; i < this.config.presets.length; i++) {
-			const p = this.config.presets[i]
-			if(p && p.id === cue.id) {
-				this.config.presets[i] = cue
-			}
-		}
-		fs.writeFile(`config/shows/${lastShow}/presets.json`, JSON.stringify({presets: this.config.presets}, null, '\t'), callback)
+		// // this.config.presets = presets.filter(p => p === null || p.id !== cue.id).concat(cue)
+		// for(let i = 0; i < this.config.presets.length; i++) {
+		// 	const p = this.config.presets[i]
+		// 	if(p && p.id === cue.id) {
+		// 		this.config.presets[i] = cue
+		// 	}
+		// }
+		// fs.writeFile(`config/shows/${lastShow}/presets.json`, JSON.stringify({presets: this.config.presets}, null, '\t'), callback)
+		this.cueStore.update(cue, callback)
 	}
 
 	createAnimation(to, duration, easing) {

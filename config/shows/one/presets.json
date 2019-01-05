@@ -1,5 +1,5 @@
 {
-	"presets": [
+	"[object Object],[object Object],[object Object],,[object Object],[object Object],[object Object],[object Object],[object Object]": [
 		{
 			"id": "p0",
 			"label": "+White",
@@ -165,6 +165,21 @@
 				"231": 255,
 				"240": 127,
 				"242": 255
+			}
+		},
+		{
+			"id": "p11",
+			"label": "p11",
+			"values": {
+				"99": 255,
+				"100": 255,
+				"126": 0,
+				"127": 255,
+				"128": 255,
+				"145": 255,
+				"146": 255,
+				"163": 255,
+				"164": 255
 			}
 		}
 	]
