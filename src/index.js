@@ -47,83 +47,98 @@ app.use('/', express.static(__dirname + '/public'));
 // 	res.sendFile(__dirname + '/public/style.css')
 // })
 
-	app.get('/config', function(req, res) {
-		const response = {"devices": engine.config.devices, "dmx": engine.dmx.data.slice(1)}
-		// Object.keys(engine.config.universes).forEach(function(key) {
-		// 	response.universes[key] = engine.config.universes[key].devices
-		// })
+app.get('/config', function(req, res) {
+	const response = {"devices": engine.config.devices, "dmx": engine.dmx.data.slice(1)}
+	// Object.keys(engine.config.universes).forEach(function(key) {
+	// 	response.universes[key] = engine.config.universes[key].devices
+	// })
 
-		res.json(response)
+	res.json(response)
+})
+
+app.get('/state', function(req, res) {
+	res.json({"state": engine.dmx.data.slice(1).data})
+	console.log("Stating...", res)
+})
+
+app.post('/state', function(req, res) {
+	engine.update(req.body)
+	res.json({"state": engine.dmx.data.slice(1).data})
+})
+
+app.post('/console', function(req, res) {
+	console.log("COMMAND", req.body)
+	// engine.parseLine(req.body.command)
+	engine.exec(req.body.command)
+	res.json({"state": engine.dmx.data.slice(1)})
+})
+
+
+io.sockets.on('connection', function(socket) {
+
+	socket.emit('init', {
+		'profiles': engine.profiles, 
+		'setup': engine.config, 
+		'programCue': engine.programCue.get(),
+		'blindCue': engine.blindCue.get(),
+		'dmx': engine.dmx.data
 	})
 
-	app.get('/state', function(req, res) {
-		res.json({"state": engine.dmx.data.slice(1).data})
-		console.log("Stating...", res)
+	socket.on('request_refresh', function() {
+		socket.emit('update', engine.dmx.data.slice(1))
 	})
 
-	app.post('/state', function(req, res) {
-		engine.update(req.body)
-		res.json({"state": engine.dmx.data.slice(1).data})
+	socket.on('update', function(update) {
+		engine.update(update)
 	})
 
-	app.post('/console', function(req, res) {
-		console.log("COMMAND", req.body)
-		engine.parseLine(req.body.command)
-		res.json({"state": engine.dmx.data.slice(1)})
+	engine.dmx.on('update', function(update) {
+		socket.emit('update', update)
 	})
 
-const cueEmitter = (cue, result) => socket.emit('cue', cue, result)
-
-	io.sockets.on('connection', function(socket) {
-		socket.emit('init', {'profiles': engine.profiles, 'setup': engine.config, 'dmx': engine.dmx.data})
-
-		socket.on('request_refresh', function() {
-			socket.emit('update', engine.dmx.data.slice(1))
-		})
-
-		socket.on('update', function(update) {
-			engine.update(update)
-		})
-
-
-		engine.dmx.on('update', function(update) {
-			socket.emit('update', update)
-		})
-
-		socket.on('cue', function(cue, action) {
-			switch (action) {
-				case 'add':
-					engine.addCue(cue, cueEmitter)
-					break
-				case 'update': 
-					engine.updateCue(cue, cueEmitter)
-					break
-				case 'remove':
-					engine.removeCue(cue, cueEmitter)
-					break
-				default:
-					//execute
-					engine.exec(cue, cueEmitter)
-				
-			}
-		})
-
-		socket.on('add_cue', function(cue) {
-			engine.addCue(cue, () => socket.emit('cue_added', cue))
-		})
-		socket.on('update_cue', function(cue) {
-			engine.updateCue(cue, () => socket.emit('cue_updated', cue))
-		})
-		socket.on('remove_cue', function(cue) {
-			engine.removeCue(cue, () => socket.emit('cue_removed', cue))
-		})
-
-		socket.on('patch', function(patch) {
-			engine.patch(patch)
-		}) 
-		engine.on('patch', function(patch) {
-			socket.emit('patch', patch)
-		})
+	engine.on('warn', function(message, ...args) {
+		socket.emit('warn', message, ...args)
 	})
+
+	socket.on('cue', function(cue, action) {
+		const cueEmitter = (result) => {
+			console.log(action, "cue:", cue, ", result:", result)
+			socket.emit('cue', cue, action, result)
+		}
+		switch (action) {
+			case 'add':
+				engine.addCue(cue, cueEmitter)
+				break
+			case 'update': 
+				engine.updateCue(cue, cueEmitter)
+				break
+			case 'remove':
+				engine.removeCue(cue, cueEmitter)
+				break
+			default:
+				//execute
+				engine.exec(cue, cueEmitter)
+			
+		}
+	})
+
+	socket.on('execute', function(item, cue) {
+		engine.exec(item, cue)
+	})
+	engine.on('executed', function(item, cue) {
+		socket.emit('executed', item, cue)
+	})
+
+	engine.on('question', function(msg) {
+		socket.emit('question', msg)
+	})
+
+	socket.on('patch', function(patch) {
+		engine.patch(patch)
+	})
+	engine.on('patched', function(patch) {
+		socket.emit('patched', patch)
+	})
+})
 
 console.log("ZeDMX listening on ", listen_port);

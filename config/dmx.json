@@ -53,7 +53,7 @@
 			"host": "192.168.1.42"
 		}
 	},
-	"devices": [
+	"heads": [
 		{
 			"id": "1",
 			"type": "monoprice-par-575",

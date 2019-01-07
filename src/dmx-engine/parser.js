@@ -1,11 +1,15 @@
+let ccount= 0
+
 const parseSelection = input => {
+	const sel = {}
 	const num = parseInt(input)
 	if(!isNaN(num)) {
 		return {
 			channel: num
 		}
 	} else {
-		return {}
+
+		return sel
 	}
 }
 
@@ -14,7 +18,7 @@ const parseOperand = input => {
 	const res = reo.exec(input)
 	const [all, value, fade, group] = res
 	if(fade)  {
-		console.log("Oper", res)
+		// console.log("Oper", res)
 		return { value, fade, group }
 	}
 	const vals = input.split(/\s+/)
@@ -62,4 +66,45 @@ const parser = (engine) => (input) => {
 	}
 }
 
+const parseCue = input => {
+	const res = re.exec(input)
+	const [ , sel, cmd, opt] = res
+	let cue = {
+		id: 'cmd' + ccount++,
+		values: {}
+	}
+	if(cmd === '?') {
+		console.log("Confirm?", sel)
+		cue = { 
+			id: sel, 
+			confirm: true
+		}
+	} else if(cmd === '@') {
+		const { channel } = parseSelection(sel)
+		if(channel) {
+			const v = parseOperand(opt)
+			const b = {}
+			if(typeof v === 'number') {
+				b[channel] = v
+				// console.log("Ch", channel, "@", v)
+			} else if (Array.isArray(v)) {
+				for(let i=0; i<v.length; i++) {
+					b[channel+i] = v[i]
+				}
+				// console.log("Chs", channel, "@", v)
+			} else {
+				const { value, fade, options } = v
+				// console.log("Fading", v)
+				b[channel] = { to: value, fade, options }
+			}
+			cue.values = b
+		}
+	} else {
+		cue = sel
+	}
+	console.log("Cueing", cue)
+	return cue
+}
+
+export { parseCue, parser }
 export default parser

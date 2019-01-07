@@ -11,7 +11,8 @@ export default class Store extends EventEmitter {
 	}
 
 	add(item, callback) {
-		let { path, items } = this
+		const { items } = this
+		console.log("ITemized", items)
 		this.items = [...items, item]
 		this.write(callback)
 		this.emit('added', item)
@@ -41,6 +42,17 @@ export default class Store extends EventEmitter {
 		return this.items
 	}
 
+	find(query) {
+		for(let i = 0, l = this.items.length; i < l; i++) {
+			const item = this.items[i]
+			if(item && (query === item.id || query === item.name || query === item.label)) {
+				// console.log("Found", item)
+				return item
+			}
+		}
+		return null
+	}
+
 	read() {
 		const { path } = this
 		const file = JSON.parse(fs.readFileSync(path, 'utf8'))
@@ -49,6 +61,6 @@ export default class Store extends EventEmitter {
 
 	write(callback) {
 		const { path, items } = this
-		fs.writeFile(path, JSON.stringify({[this.items]: this.items}, null, '\t'), callback)
+		fs.writeFile(path, JSON.stringify({[this.key]: this.items}, null, '\t'), callback)
 	}
 }
