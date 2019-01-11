@@ -23,8 +23,8 @@ export default class Engine extends EventEmitter {
 		this.cueStore = new Store(`config/shows/${this.config.lastShow}/presets.json`, 'cues')
 		this.config.cues = this.cueStore.list()
 
-		this.programCue = new Cue('pgm')
-		this.blindCue = new Cue('blind')
+		this.programCue = new Cue('programCue')
+		this.blindCue = new Cue('blindCue')
 	}
 
 	saveProgrammerAsCue(name) {
@@ -51,8 +51,13 @@ export default class Engine extends EventEmitter {
 		return this.dms.data[channel]
 	}
 
+	release(what, target = 'live') {
+		const cue = target==='blindCue' ? this.blindCue : this.programCue
+		cue.release(what)
+		this.emit("released", what, target)
+	}
+
 	exec(what, target = 'live') {
-		// console.log("Exec what?", what)
 		let u = typeof what === 'string' ? parseCue(what) : what 
 		if(typeof u === 'undefined') {
 			this.emit('warn', 'Unable to execute', what)
@@ -76,7 +81,7 @@ export default class Engine extends EventEmitter {
 			})
 			return
 		} 
-		if(target === 'blind') {
+		if(target === 'blindCue') {
 			this.blindCue.include(u)
 		} else {
 			// if(typeof what === 'string') {

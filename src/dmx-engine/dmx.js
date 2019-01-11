@@ -10,7 +10,6 @@ class DMXEngine extends EventEmitter {
 	constructor(options) {
 		super()
 		this.options = options || {}
-		// this.universes = {}
 		this.data = Buffer.alloc(BUFFER_SIZE, 0)
 		this.drivers   = drivers
 		console.log("Drivers: ", drivers)
@@ -33,6 +32,11 @@ class DMXEngine extends EventEmitter {
 			this.data[i] = value
 		}
 		this.emit('updateAll', {value, from, to})
+	}
+
+	get() {
+		// for socket get
+		return this.data
 	}
 }
 

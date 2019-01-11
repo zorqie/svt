@@ -11,31 +11,22 @@ module.exports = {
 		],
 		ranges: {
 			'ctrl': {
-				'type': 'option',
 				'options': [
-					{'value':   0, 'label': 'Black Out'},
-					{'value':   1, 'label': 'Dimmer 1'},
-					{'value':  16, 'label': 'Dimmer 2'},
-					{'value':  32, 'label': 'Red'},
-					{'value':  48, 'label': 'Green'},
-					{'value':  64, 'label': 'Blue'},
-					{'value':  80, 'label': 'Purple'},
-					{'value':  96, 'label': 'Yellow'},
-					{'value': 112, 'label': 'Cyan'},
-					{'value': 128, 'label': 'White'},
-					{'value': 144, 'label': 'Color change'},
-					{'value': 160, 'label': 'Color flow'},
-					{'value': 176, 'label': 'Color dream'},
-					{'value': 192, 'label': 'Multi flow'},
-					{'value': 208, 'label': 'Dream flow'},
-					{'value': 224, 'label': 'Two color flow'},
-					{'value': 240, 'label': 'Sound activity'}		
+					{'min':   0, "max":  31, 'label': 'OFF'},
+					{'min':  32, "max":  63, 'label': 'Pulse Down'},
+					{'min':  64, "max":  95, 'label': 'Pulse Up'},
+					{'min':  96, "max": 127, 'label': 'Pulse'},
+					{'min': 128, "max": 164, 'label': 'Fade'},
+					{'min': 165, "max": 191, 'label': 'Auto'},
+					{'min': 192, "max": 223, 'label': '4Color'},
+					{'min': 224, "max": 255, 'label': 'Multi'}
 				]
 			},
-			'dimmer': {
-				'type': 'slider',
-				'min': 0,
-				'max': 255
+			"strobe": {
+				"options": [
+					{"min":  0, "max":  14, "label": "OFF"},
+					{"min": 15, "max": 255, "label": "Strobing", "speed": "asc"}
+				]
 			}
 		}
 	},
@@ -54,32 +45,33 @@ module.exports = {
 			'dimmer_mode' 
 		],
 		ranges: {
-			'ctrl': {
-				'type': 'option',
+			'program': {
 				'options': [
-					{'value':   0, 'label': 'Black Out'},
-					{'value':   1, 'label': 'Dimmer 1'},
-					{'value':  16, 'label': 'Dimmer 2'},
-					{'value':  32, 'label': 'Red'},
-					{'value':  48, 'label': 'Green'},
-					{'value':  64, 'label': 'Blue'},
-					{'value':  80, 'label': 'Purple'},
-					{'value':  96, 'label': 'Yellow'},
-					{'value': 112, 'label': 'Cyan'},
-					{'value': 128, 'label': 'White'},
-					{'value': 144, 'label': 'Color change'},
-					{'value': 160, 'label': 'Color flow'},
-					{'value': 176, 'label': 'Color dream'},
-					{'value': 192, 'label': 'Multi flow'},
-					{'value': 208, 'label': 'Dream flow'},
-					{'value': 224, 'label': 'Two color flow'},
-					{'value': 240, 'label': 'Sound activity'}		
+					{'min':   0, "max":  31, 'label': 'OFF'},
+					{'min':  32, "max":  63, 'label': 'Pulse Down'},
+					{'min':  64, "max":  95, 'label': 'Pulse Up'},
+					{'min':  96, "max": 127, 'label': 'Pulse'},
+					{'min': 128, "max": 164, 'label': 'Fade'},
+					{'min': 165, "max": 191, 'label': 'Auto'},
+					{'min': 192, "max": 223, 'label': 'Color flash'},
+					{'min': 224, "max": 255, 'label': 'Sound'}
 				]
 			},
-			'dimmer': {
-				'type': 'slider',
-				'min': 0,
-				'max': 255
+			"strobe": {
+				"options": [
+					{"min":  0, "max":  14, "label": "OFF"},
+					{"min": 15, "max": 255, "label": "Strobing", "speed": "asc"}
+				]
+			},
+			'dimmer_mode': {
+				"options": [
+					{"min":   0, "max":   5, "label": "Device"},
+					{"min":   6, "max":  55, "label": "Mode 0"},
+					{"min":  56, "max": 105, "label": "Mode 1"},
+					{"min": 106, "max": 155, "label": "Mode 2"},
+					{"min": 156, "max": 205, "label": "Mode 3"},
+					{"min": 206, "max": 255, "label": "Mode 4"}
+				]
 			}
 		}
 	},

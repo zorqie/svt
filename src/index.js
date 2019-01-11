@@ -67,8 +67,7 @@ app.post('/state', function(req, res) {
 })
 
 app.post('/console', function(req, res) {
-	console.log("COMMAND", req.body)
-	// engine.parseLine(req.body.command)
+	console.log("Posted COMMAND", req.body)
 	engine.exec(req.body.command)
 	res.json({"state": engine.dmx.data.slice(1)})
 })
@@ -86,6 +85,14 @@ io.sockets.on('connection', function(socket) {
 
 	socket.on('request_refresh', function() {
 		socket.emit('update', engine.dmx.data.slice(1))
+	})
+
+	socket.on('get', function(what) {
+		let state = engine[what]
+		if(state && typeof state.get === 'function') {
+			state = state.get()
+		} 
+		socket.emit('state', state) 
 	})
 
 	socket.on('update', function(update) {
@@ -127,6 +134,13 @@ io.sockets.on('connection', function(socket) {
 	})
 	engine.on('executed', function(item, cue) {
 		socket.emit('executed', item, cue)
+	})
+
+	socket.on('release', function(item, cue) {
+		engine.release(item, cue)
+	})
+	engine.on('released', function(item, cue) {
+		socket.emit('released', item, cue)
 	})
 
 	engine.on('question', function(msg) {

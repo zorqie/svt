@@ -76,7 +76,8 @@ const parseCue = input => {
 	if(cmd === '?') {
 		console.log("Confirm?", sel)
 		cue = { 
-			id: sel, 
+			id: sel,
+			command: input, 
 			confirm: true
 		}
 	} else if(cmd === '@') {
