@@ -31,46 +31,14 @@ const parseOperand = input => {
 	}
 }
 
+const rx = /(sel|rel|inc|)/
 const re = /(?:(.*)([@!?]))?(.*)/
-const parser = (engine) => (input) => {
-	const res = re.exec(input)
-	const [ , sel, cmd, opt] = res
-	if(cmd === '?') {
-		console.log("Confirm?", sel)
-	} else if(cmd === '@') {
-		const { channel } = parseSelection(sel)
-		if(channel) {
-			const v = parseOperand(opt)
-			const b = {}
-			if(typeof v === 'number') {
-				b[channel] = v
-				engine.dmx.update(b)
-				console.log("Ch", channel, "@", v)
-			} else if (Array.isArray(v)) {
-				for(let i=0; i<v.length; i++) {
-					b[channel+i] = v[i]
-				}
-				engine.dmx.update(b)
-				console.log("Chs", channel, "@", v)
-			} else {
-				const { value, fade, options } = v
-				console.log("Fading", v)
-				const to = {}
-				to[channel] = value
-				const animation = engine.createAnimation(to, fade * 1000)
-				animation.run()
-			}
-		}
-	} else {
-
-	}
-}
-
 const parseCue = input => {
 	const res = re.exec(input)
 	const [ , sel, cmd, opt] = res
 	let cue = {
-		id: 'cmd' + ccount++,
+		id: 'cmd',
+		seq: ccount++,
 		values: {}
 	}
 	if(cmd === '?') {
@@ -107,5 +75,4 @@ const parseCue = input => {
 	return cue
 }
 
-export { parseCue, parser }
-export default parser
+export { parseCue }

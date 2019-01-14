@@ -78,8 +78,8 @@ io.sockets.on('connection', function(socket) {
 	socket.emit('init', {
 		'profiles': engine.profiles, 
 		'setup': engine.config, 
-		'programCue': engine.programCue.get(),
-		'blindCue': engine.blindCue.get(),
+		'programCue': engine.targets['pgm'].get(),
+		'blindCue': engine.targets['blind'].get(),
 		'dmx': engine.dmx.data
 	})
 
@@ -88,7 +88,7 @@ io.sockets.on('connection', function(socket) {
 	})
 
 	socket.on('get', function(what) {
-		let state = engine[what]
+		let state = engine.targets[what]
 		if(state && typeof state.get === 'function') {
 			state = state.get()
 		} 

@@ -2,9 +2,9 @@ import { EventEmitter } from 'events'
 import fs from 'fs'
 
 import Animation from './animation'
-import Cue from './cue'
+import Cue from './que'
 import DMXEngine from './dmx'
-import { parseCue, parser } from './parser'
+import { parseCue } from './parser'
 import profiles from './profiles'
 import Store from './store'
 
@@ -23,8 +23,11 @@ export default class Engine extends EventEmitter {
 		this.cueStore = new Store(`config/shows/${this.config.lastShow}/presets.json`, 'cues')
 		this.config.cues = this.cueStore.list()
 
-		this.programCue = new Cue('programCue')
-		this.blindCue = new Cue('blindCue')
+		this.targets = {
+			pgm: new Cue(this, 'pgm'),
+			blind: new Cue(this, 'blind'),
+			live: new Cue(this, 'live') // Do we really need this?
+		}
 	}
 
 	saveProgrammerAsCue(name) {
@@ -51,13 +54,12 @@ export default class Engine extends EventEmitter {
 		return this.dms.data[channel]
 	}
 
-	release(what, target = 'live') {
-		const cue = target==='blindCue' ? this.blindCue : this.programCue
-		cue.release(what)
+	release(what, target = 'pgm') {
+		this.targets[target].release(what)
 		this.emit("released", what, target)
 	}
 
-	exec(what, target = 'live') {
+	exec(what, target = 'pgm') {
 		let u = typeof what === 'string' ? parseCue(what) : what 
 		if(typeof u === 'undefined') {
 			this.emit('warn', 'Unable to execute', what)
@@ -81,21 +83,12 @@ export default class Engine extends EventEmitter {
 			})
 			return
 		} 
-		if(target === 'blindCue') {
-			this.blindCue.include(u)
+		if(u.values) {
+			this.update(u.values)
 		} else {
-			// if(typeof what === 'string') {
-			// 	this.parseLine(what)
-			// } else if(what.values) {
-			// 	this.update(what.values)
-			// }
-			if(u.values) {
-				this.update(u.values)
-			} else {
-				this.update(u)
-			}
-			this.programCue.include(u)
+			this.update(u)
 		}
+		this.targets[target].include(u)
 		this.emit('executed', what, target)
 	}
 
@@ -117,3 +110,5 @@ export default class Engine extends EventEmitter {
 	}
 
 }
+
+
