@@ -123,9 +123,7 @@ io.sockets.on('connection', function(socket) {
 				engine.removeCue(cue, cueEmitter)
 				break
 			default:
-				//execute
-				engine.exec(cue, cueEmitter)
-			
+				//do nothing
 		}
 	})
 

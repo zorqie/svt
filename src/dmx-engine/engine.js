@@ -20,7 +20,7 @@ export default class Engine extends EventEmitter {
 			this.dmx.patchOutput(out, this.config.outputs[out])
 		}
 
-		this.cueStore = new Store(`config/shows/${this.config.lastShow}/presets.json`, 'cues')
+		this.cueStore = new Store(`config/shows/${this.config.lastShow}/presets.json`, 'cues', 'q')
 		this.config.cues = this.cueStore.list()
 
 		this.targets = {
@@ -35,7 +35,7 @@ export default class Engine extends EventEmitter {
 	}
 
 	addCue(cue, callback) {
-		this.cueStore.add(cue, callback)
+		this.cueStore.add(this.targets.pgm.get(), callback)
 	}
 
 	removeCue(cue, callback) {
@@ -43,7 +43,10 @@ export default class Engine extends EventEmitter {
 	}
 
 	updateCue(cue, callback) {
-		this.cueStore.update(cue, callback)
+		const { id, ...others } = this.targets.pgm.get()
+		const updated = {...cue, ...others }
+		console.log("Updating", updated)
+		// this.cueStore.update(cue, callback)
 	}
 
 	createAnimation(to, duration, easing) {

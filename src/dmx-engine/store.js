@@ -3,17 +3,20 @@ import fs from 'fs'
 
 export default class Store extends EventEmitter {
 
-	constructor(path, key = 'items') {
+	constructor(path, key = 'items', idPrefix = '') {
 		super()
 		this.path = path
 		this.key = key
+		this.idPrefix = idPrefix
 		this.items = this.read()
 	}
 
 	add(item, callback) {
 		const { items } = this
 		console.log("ITemized", items)
-		this.items = [...items, item]
+		const { id, ...others } = item
+		const newItem = {id: this.idPrefix+items.length, ...others}
+		this.items = [...items, newItem]
 		this.write(callback)
 		this.emit('added', item)
 	}
