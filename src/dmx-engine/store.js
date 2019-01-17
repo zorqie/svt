@@ -18,14 +18,14 @@ export default class Store extends EventEmitter {
 		const newItem = {id: this.idPrefix+items.length, ...others}
 		this.items = [...items, newItem]
 		this.write(callback)
-		this.emit('added', item)
+		this.emit('added', item, this.key)
 	}
 
 	remove(item, callback) {
 		const { path, items } = this
 		this.items = items.filter(p => p === null || p.id !== item.id)
 		this.write(callback)
-		this.emit('removed', item)
+		this.emit('removed', item, this.key)
 	}
 
 	update(item, callback) {
@@ -38,7 +38,7 @@ export default class Store extends EventEmitter {
 			}
 		}
 		this.write(callback)
-		this.emit('updated', item)
+		this.emit('updated', item, this.key)
 	}
 
 	list() {
@@ -57,9 +57,14 @@ export default class Store extends EventEmitter {
 	}
 
 	read() {
-		const { path } = this
-		const file = JSON.parse(fs.readFileSync(path, 'utf8'))
-		return file[this.key]
+		let result = []
+		try {
+			const file = JSON.parse(fs.readFileSync(this.path, 'utf8'))
+			result = file[this.key]
+		} catch (err) {
+			console.error(err)
+		}
+		return result
  	}
 
 	write(callback) {

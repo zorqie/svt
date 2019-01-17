@@ -17,13 +17,14 @@ export default class Que {
 
 	select(query) {
 		if(typeof query === 'string') {
+			const { stores } = this.engine
 			// 
-			const cue = this.engine.cueStore.find(query)
+			const cue = stores.cues.find(query)
 			if(cue) {
 				this.cues = {...this.cues, [cue.id]: cue}
 				return this
 			}
-			const head = this.engine.headStore.find(query)
+			const head = stores.heads.find(query)
 			if(head) {
 				this.heads = {...this.heads, [head.id]: head}
 			}

@@ -151,6 +151,10 @@ io.sockets.on('connection', function(socket) {
 	engine.on('patched', function(patch) {
 		socket.emit('patched', patch)
 	})
+
+	socket.on('cmd', function(input) {
+		console.log("C:\\>", input)
+	})
 })
 
 console.log("ZeDMX listening on ", listen_port);

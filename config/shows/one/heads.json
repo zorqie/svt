@@ -1,0 +1,100 @@
+{
+	"heads": [
+		{
+			"id": "1",
+			"type": "monoprice-par-575",
+			"address": 98,
+			"name": "Par 1"
+		},
+		{
+			"id": "2",
+			"type": "monoprice-par-575",
+			"address": 107,
+			"name": "Par 2"
+		},
+		{
+			"id": "3",
+			"type": "monoprice-par-575",
+			"address": 126,
+			"name": "Par 3"
+		},
+		{
+			"id": "4",
+			"type": "monoprice-par-575",
+			"address": 135,
+			"name": "Par 4"
+		},
+		{
+			"id": "5",
+			"type": "monoprice-par-575",
+			"address": 144,
+			"name": "Par 5"
+		},
+		{
+			"id": "6",
+			"type": "monoprice-par-575",
+			"address": 153,
+			"name": "Par 6"
+		},
+		{
+			"id": "7",
+			"type": "monoprice-par-575",
+			"address": 162,
+			"name": "Par 7"
+		},
+		{
+			"id": "8",
+			"type": "monoprice-par-575",
+			"address": 171,
+			"name": "Par 8"
+		},
+		{
+			"id": "21",
+			"type": "monoprice-par-hex",
+			"address": 206,
+			"name": "Hex 1"
+		},
+		{
+			"id": "22",
+			"type": "monoprice-par-hex",
+			"address": 217,
+			"name": "Hex 2"
+		},
+		{
+			"id": "23",
+			"type": "monoprice-par-hex",
+			"address": 228,
+			"name": "Hex 3"
+		},
+		{
+			"id": "24",
+			"type": "monoprice-par-hex",
+			"address": 239,
+			"name": "Hex 4"
+		},
+		{
+			"id": "25",
+			"type": "monoprice-par-hex",
+			"address": 250,
+			"name": "Hex 5"
+		},
+		{
+			"id": "26",
+			"type": "monoprice-par-hex",
+			"address": 261,
+			"name": "Hex 6"
+		},
+		{
+			"id": "27",
+			"type": "monoprice-par-hex",
+			"address": 272,
+			"name": "Hex 7"
+		},
+		{
+			"id": "28",
+			"type": "monoprice-par-hex",
+			"address": 283,
+			"name": "Hex 8"
+		}
+	]
+}

@@ -8,6 +8,14 @@ import { parseCue } from './parser'
 import profiles from './profiles'
 import Store from './store'
 
+const sections = [
+	{id: "cues",    prefix: 'q'},
+	{id: "heads",   prefix: '' },
+	{id: "groups",  prefix: 'g'},
+	{id: "grids",   prefix: '' },
+	{id: "presets", prefix: 'p'},
+]
+
 export default class Engine extends EventEmitter {
 	constructor() {
 		super()
@@ -20,8 +28,13 @@ export default class Engine extends EventEmitter {
 			this.dmx.patchOutput(out, this.config.outputs[out])
 		}
 
-		this.cueStore = new Store(`config/shows/${this.config.lastShow}/presets.json`, 'cues', 'q')
-		this.config.cues = this.cueStore.list()
+		this.stores = {}
+		for(let s in sections) {
+			const sec = sections[s]
+			const store = new Store(`config/shows/${this.config.lastShow}/${sec.id}.json`, sec.id, sec.prefix)
+			this.stores[sec.id] = store
+			this.config[sec.id] = store.list()
+		}
 
 		this.targets = {
 			pgm: new Cue(this, 'pgm'),
@@ -35,18 +48,26 @@ export default class Engine extends EventEmitter {
 	}
 
 	addCue(cue, callback) {
-		this.cueStore.add(this.targets.pgm.get(), callback)
+		if(cue && cue.values) {
+			this.stores.cues.add(cue, callback)
+		} else {
+			this.stores.cues.add(this.targets.pgm.get(), callback)
+		}
 	}
 
 	removeCue(cue, callback) {
-		this.cueStore.remove(cue, callback)
+		this.stores.cues.remove(cue, callback)
 	}
 
-	updateCue(cue, callback) {
-		const { id, ...others } = this.targets.pgm.get()
-		const updated = {...cue, ...others }
+	updateCue(old, callback) {
+		const { cues, values } = this.targets.pgm.get()
+		const updated = {
+			id: old.id, 
+			cues: {...old.cues, ...cues},
+			values: {...old.values, ...values}
+		}
 		console.log("Updating", updated)
-		// this.cueStore.update(cue, callback)
+		this.stores.cues.update(cue, callback)
 	}
 
 	createAnimation(to, duration, easing) {
@@ -69,7 +90,7 @@ export default class Engine extends EventEmitter {
 			return
 		} else if(typeof u === 'string') {
 			// parsed into cue id
-			let q = this.cueStore.find(u)
+			let q = this.stores.cues.find(u)
 			if(q===null) {
 				this.emit('warn', 'No such cue: ' + u)
 				return
