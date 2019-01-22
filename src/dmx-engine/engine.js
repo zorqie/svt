@@ -21,7 +21,6 @@ export default class Engine extends EventEmitter {
 		super()
 		this.profiles = profiles  // TODO load only profiles used in show
 		this.dmx = new DMXEngine()
-		// this.parseLine = parser(this) // replaced by parseCue
 
 		this.config	= JSON.parse(fs.readFileSync('config/dmx.json', 'utf8'))
 		for(const out in this.config.outputs) {
@@ -34,13 +33,20 @@ export default class Engine extends EventEmitter {
 			const store = new Store(`config/shows/${this.config.lastShow}/${sec.id}.json`, sec.id, sec.prefix)
 			this.stores[sec.id] = store
 			this.config[sec.id] = store.list()
+			store.on('added', this.storeModified.bind(this))
+			store.on('updated', this.storeModified.bind(this))
+			store.on('removed', this.storeModified.bind(this))
 		}
-
 		this.targets = {
-			pgm: new Cue(this, 'pgm'),
+			pgm:   new Cue(this, 'pgm'),
 			blind: new Cue(this, 'blind'),
-			live: new Cue(this, 'live') // Do we really need this?
+			live:  new Cue(this, 'live') // Do we really need this?
 		}
+	}
+
+	storeModified(item, storeId) {
+		this.config[storeId] = this.stores[storeId].list()
+		this.emit('config', storeId)
 	}
 
 	saveProgrammerAsCue(name) {
@@ -63,11 +69,12 @@ export default class Engine extends EventEmitter {
 		const { cues, values } = this.targets.pgm.get()
 		const updated = {
 			id: old.id, 
+			label: old.label,
 			cues: {...old.cues, ...cues},
 			values: {...old.values, ...values}
 		}
 		console.log("Updating", updated)
-		this.stores.cues.update(cue, callback)
+		this.stores.cues.update(updated, callback)
 	}
 
 	createAnimation(to, duration, easing) {

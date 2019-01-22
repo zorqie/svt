@@ -78,9 +78,15 @@ io.sockets.on('connection', function(socket) {
 	socket.emit('init', {
 		'profiles': engine.profiles, 
 		'setup': engine.config, 
-		'programCue': engine.targets['pgm'].get(),
-		'blindCue': engine.targets['blind'].get(),
 		'dmx': engine.dmx.data
+	})
+	engine.on('config', function(key) {
+		//TODO Send only changes
+		socket.emit('init', {
+			'profiles': engine.profiles, 
+			'setup': engine.config, 
+			'dmx': engine.dmx.data
+		})
 	})
 
 	socket.on('request_refresh', function() {
@@ -128,6 +134,10 @@ io.sockets.on('connection', function(socket) {
 	})
 
 	socket.on('execute', function(item, cue) {
+		engine.exec(item, cue)
+	})
+	// TODO Choose one exec or 'ute
+	socket.on('exec', function(item, cue) {
 		engine.exec(item, cue)
 	})
 	engine.on('executed', function(item, cue) {

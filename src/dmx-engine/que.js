@@ -115,15 +115,25 @@ export default class Que {
 					if(this.chq[ch]!==undefined && this.chq[ch].id !== what.id) {
 						this.cues[this.chq[ch].id] = undefined // no longer included but values remain, unless overridden
 					}
-					this.channels[ch] = what.values[ch]
+					const old = this.channels[ch] 
+					const val = what.values[ch]
+					if(typeof old === 'object') {
+						this.channels[ch] = {...old, ...val}
+					} else if(typeof val === 'object') {
+						this.channels[ch] = {to: old, ...val}
+					} else {
+						this.channels[ch] = val
+					}
 					this.chq[ch] = what
 				}
-				this.cues[what.id] = what
+				if(what.id) {
+					this.cues[what.id] = what
+				}
 			} else {
 				this.channels = {...this.channels, ...what}
 			}
 		}
-		console.log("%s.included", this.id, this.get())
+		console.log("%s.included", this.id, what/*, '\nCurrently', this.get()*/)
 	}
 
 	update() {
