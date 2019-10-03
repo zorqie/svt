@@ -5,6 +5,7 @@ import Animation from './animation'
 import Cue from './que'
 import DMXEngine from './dmx'
 import { parseCue } from './parser'
+import { parseLine } from './nparser'
 import profiles from './profiles'
 import Store from './store'
 
@@ -15,6 +16,11 @@ const sections = [
 	{id: "grids",   prefix: '' },
 	{id: "presets", prefix: 'p'},
 ]
+
+const targets = ['live', 'pgm', 'blind']
+
+const matches = (a, b) => typeof a === 'string' && typeof b === 'string' && a.toUpperCase() === b.toUpperCase()
+
 
 export default class Engine extends EventEmitter {
 	constructor() {
@@ -37,11 +43,12 @@ export default class Engine extends EventEmitter {
 			store.on('updated', this.storeModified.bind(this))
 			store.on('removed', this.storeModified.bind(this))
 		}
-		this.targets = {
+		/*this.targets = {
 			pgm:   new Cue(this, 'pgm'),
 			blind: new Cue(this, 'blind'),
-			live:  new Cue(this, 'live') // Do we really need this?
-		}
+			live:  new Cue(this, 'live')
+		}*/
+		this.targets = targets.reduce((all, t) => ({...all, [t]:new Cue(this, t)}), {})
 	}
 
 	storeModified(item, storeId) {
@@ -91,9 +98,24 @@ export default class Engine extends EventEmitter {
 	}
 
 	exec(what, target = 'pgm') {
+		let command = parseLine(what)
 		let u = typeof what === 'string' ? parseCue(what) : what 
 		if(typeof u === 'undefined') {
 			this.emit('warn', 'Unable to execute', what)
+			const { view } = command
+			if(view) {
+				if(view==='engine') {
+					console.log("Engine:", this)
+				} else if(targets.includes(view)) {
+					console.log("Target:", this.targets[view].get())
+				} else {
+					const found = sections
+						.filter(s=>s.id!=='grids')
+						.map(s => this.stores[s.id].list().filter(e => e && e.label && ( matches(e.label, view) || matches(e.id, view) )))
+					// TODO we need to know the type of thing we found, perhaps inject type:s.id
+					console.log("\nFOUND", [].concat(...found))
+				}
+			}
 			return
 		} else if(typeof u === 'string') {
 			// parsed into cue id
@@ -103,6 +125,10 @@ export default class Engine extends EventEmitter {
 				return
 			} else {
 				u = q
+			}
+		} else if(command.view) {
+			if(targets.includes(command.view)) {
+				console.log("Target:", this.targets[command.view])
 			}
 		} else if(u.confirm) {
 			this.emit('question', {
