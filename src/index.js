@@ -113,6 +113,10 @@ io.sockets.on('connection', function(socket) {
 		socket.emit('warn', message, ...args)
 	})
 
+	engine.on('info', function(message, ...args) {
+		socket.emit('info', message, ...args)
+	})
+
 	socket.on('cue', function(cue, action) {
 		const cueEmitter = (result) => {
 			console.log(action, "cue:", cue, ", result:", result)

@@ -51,7 +51,6 @@ const rxLine = /(?:(.*)([=@!?]))?(.*)/
 const rxKeywords = /(heads|h|groups|g|cues|q|channels|c)/
 const parseLine = input => {
 	const [left, right] = input.split(/\s*=\s*/)
-	console.log("LR: ]", left, "[ ]", right)
 	const res = rxLine.exec(left)
 	const [ , sel, cmd, opt] = res
 	console.log("Parsed: ", sel, cmd, opt)
@@ -59,17 +58,16 @@ const parseLine = input => {
 		id: 'cmd',
 		seq: ccount++,
 		as: right,
+		input,
 		sel,
 		cmd,
 		opt,
 	}
 	if(cmd === '?') {
 		console.log("Confirm?", sel)
-		command = { 
-			id: sel,
-			command: input, 
-			confirm: true
-		}
+		command.exec = sel
+		command.confirm = true
+
 	} else if(cmd === '=') {
 		console.log("assign: ", opt, "to", sel)
 	} else if(cmd === '@') {
@@ -88,12 +86,10 @@ const parseLine = input => {
 		}
 	} else if(cmd === '!') {
 		// execute
-		command = sel
+		command.exec = sel
 	} else {
 		// view
-		command = {
-			view: opt
-		}
+		command.view = opt
 	}
 	console.log("Queing", command)
 	return command

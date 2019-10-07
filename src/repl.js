@@ -3,11 +3,11 @@ import repl from "repl"
 import Engine from './dmx-engine/engine'
 
 const engine = new Engine()
-console.log("Engine: ", engine)
+// console.log("Engine: ", engine)
 
 function dmxEval(input, context, filename, callback) {
 	// engine.updateAll('art1', 0)
-	engine.parseLine(input)
+	engine.exec(input)
 	callback(null, input)
 }
 

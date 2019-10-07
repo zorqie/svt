@@ -4,7 +4,7 @@ import fs from 'fs'
 import Animation from './animation'
 import Cue from './que'
 import DMXEngine from './dmx'
-import { parseCue } from './parser'
+// import { parseCue } from './parser'
 import { parseLine } from './nparser'
 import profiles from './profiles'
 import Store from './store'
@@ -98,54 +98,51 @@ export default class Engine extends EventEmitter {
 	}
 
 	exec(what, target = 'pgm') {
-		let command = parseLine(what)
-		let u = typeof what === 'string' ? parseCue(what) : what 
-		if(typeof u === 'undefined') {
-			this.emit('warn', 'Unable to execute', what)
+		const command = typeof what === 'string' ? parseLine(what) : what 
+		if(command.view) {
 			const { view } = command
 			if(view) {
 				if(view==='engine') {
 					console.log("Engine:", this)
 				} else if(targets.includes(view)) {
 					console.log("Target:", this.targets[view].get())
+					this.emit('view', view, this.targets[view].get())
 				} else {
 					const found = sections
 						.filter(s=>s.id!=='grids')
 						.map(s => this.stores[s.id].list().filter(e => e && e.label && ( matches(e.label, view) || matches(e.id, view) )))
 					// TODO we need to know the type of thing we found, perhaps inject type:s.id
 					console.log("\nFOUND", [].concat(...found))
+					this.emit('info', view, found)
 				}
 			}
 			return
-		} else if(typeof u === 'string') {
+		} else if(command.exec) {
 			// parsed into cue id
-			let q = this.stores.cues.find(u)
+			let q = this.stores.cues.find(command.exec)
 			if(q===null) {
-				this.emit('warn', 'No such cue: ' + u)
+				this.emit('warn', 'No such cue: ' + command.exec)
 				return
 			} else {
-				u = q
+				command.values = q.values
 			}
-		} else if(command.view) {
-			if(targets.includes(command.view)) {
-				console.log("Target:", this.targets[command.view])
-			}
-		} else if(u.confirm) {
+
+		} else if(command.confirm) {
 			this.emit('question', {
-				text: 'Confirm ' + u.id + '?', 
+				text: 'Confirm ' + command.exec + '?', 
 				onOk: { 
 					event: 'execute', 
-					params: u.id + '!'
+					params: command.exec + '!'
 				}
 			})
 			return
 		} 
-		if(u.values) {
-			this.update(u.values)
+		if(command.values) {
+			this.update(command.values)
 		} else {
-			this.update(u)
+			this.update(command)
 		}
-		this.targets[target].include(u)
+		this.targets[target].include(command)
 		this.emit('executed', what, target)
 	}
 

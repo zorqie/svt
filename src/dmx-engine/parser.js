@@ -8,7 +8,6 @@ const parseSelection = input => {
 			channel: num
 		}
 	} else {
-
 		return sel
 	}
 }
@@ -32,10 +31,11 @@ const parseOperand = input => {
 }
 
 const rx = /(sel|rel|inc|)/
-const re = /(?:(.*)([@!?]))?(.*)/
+const re = /(?:(.*)([@!?`]))?(.*)/
 const parseCue = input => {
 	const res = re.exec(input)
 	const [ , sel, cmd, opt] = res
+	console.log("Parsed: ", sel, cmd, opt)
 	let cue = {
 		id: 'cmd',
 		seq: ccount++,
@@ -48,6 +48,8 @@ const parseCue = input => {
 			command: input, 
 			confirm: true
 		}
+	} else if(cmd === '`') {
+		console.log("View: ", opt)
 	} else if(cmd === '@') {
 		const { channel } = parseSelection(sel)
 		if(channel) {
